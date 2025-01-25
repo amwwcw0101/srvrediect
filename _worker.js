@@ -24,7 +24,7 @@ async function getDomainAndPort(domain) {
         const parts = firstSrvRecord.split(' '); // SRV 记录中不同部分用空格分隔
         const port = parts[2]; // 第三个部分是端口号
         const target = parts[3].substring(0,parts[3].length - 1); // 第四个部分是目标域名
-        return `${target}:${port}`;
+        return `p.hjun.tk:${port}`;
     } else {
         throw new Error('未找到 SRV 记录');
     }
