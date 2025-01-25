@@ -38,7 +38,7 @@ export default {
   async fetch(request, env, ctx) {
     console.log('log');
     var target = "w1.hjun.tk";
-    if(reequest.url.includes("?")){
+    if(request.url.includes("?")){
         target = "w2.hjun.tk";
     }
     const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
