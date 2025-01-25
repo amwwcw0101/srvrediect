@@ -40,7 +40,7 @@ export default {
     const url = new URL(request.url);
     var target = "w1.hjun.tk";
     if(url.searchParams.length > 0){
-        var target = "w2.hjun.tk";
+        target = "w2.hjun.tk";
     }
     const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
     console.log('域名和端口号:', result);
