@@ -39,7 +39,7 @@ export default {
     console.log('log');
     const url = new URL(request.url);
     var target = "w1.hjun.tk";
-    if(url.searchParams.length > 0){
+    if(url.searchParams != null){
         target = "w2.hjun.tk";
     }
     const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
