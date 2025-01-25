@@ -37,9 +37,8 @@ async function getDomainAndPort(domain,strdomain) {
 export default {
   async fetch(request, env, ctx) {
     console.log('log');
-    const url = new URL(request.url);
     var target = "w1.hjun.tk";
-    if(url.searchParams != null){
+    if(reequest.url.includes("?")){
         target = "w2.hjun.tk";
     }
     const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
