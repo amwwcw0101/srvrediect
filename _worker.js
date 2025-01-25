@@ -17,14 +17,14 @@ async function resolveSrv(domain) {
     return data.Answer;
 }
 
-async function getDomainAndPort(domain) {
+async function getDomainAndPort(domain,strdomain) {
     const srvResult = await resolveSrv(domain);
     if (srvResult && srvResult.length > 0) {
         const firstSrvRecord = srvResult[0].data;
         const parts = firstSrvRecord.split(' '); // SRV 记录中不同部分用空格分隔
         const port = parts[2]; // 第三个部分是端口号
         const target = parts[3].substring(0,parts[3].length - 1); // 第四个部分是目标域名
-        return `sf4.hjun.tk:${port}`;
+        return `${strdomain}:${port}`;
     } else {
         throw new Error('未找到 SRV 记录');
     }
@@ -37,8 +37,12 @@ async function getDomainAndPort(domain) {
 export default {
   async fetch(request, env, ctx) {
     console.log('log');
-    var r = "";
-    const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net');
+    const url = new URL(request.url);
+    var target = "w1.hjun.tk";
+    if(url.searchParams.length > 0){
+        var target = "w2.hjun.tk";
+    }
+    const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
     console.log('域名和端口号:', result);
     const location = `http://${result}`;
     return Response.redirect(location, 302);
