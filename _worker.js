@@ -32,10 +32,15 @@ async function getDomainAndPort(domain,strdomain) {
 
 
 function getQueryParam(param) {
-  const pairs = request.url.search.slice(1).split('&');
+    const iindex = request.url.indexOf('?');
+    if(iindex == -1)
+        return null;  
+  const pairs = request.url.substring(iindex + 1).split('&');
   for (const pair of pairs) {
     const [key, value] = pair.split('=');
-    if (key === param) return decodeURIComponent(value || '');
+    if (key === param) 
+        if(value != "")
+            return value;
   }
   return null;
 }
