@@ -32,7 +32,7 @@ async function getDomainAndPort(domain,strdomain) {
 
 
 function getQueryParam(param , url) {
-    const iindex = url.indexOf('/');
+    const iindex = url.lastIndexOf('/');
     if(iindex < 7 )
         return null;  
   const value = url.substring(iindex + 1);
