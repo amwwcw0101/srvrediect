@@ -31,15 +31,25 @@ async function getDomainAndPort(domain,strdomain) {
 }
 
 
-
+function getQueryParam(param) {
+  const pairs = request.url.search.slice(1).split('&');
+  for (const pair of pairs) {
+    const [key, value] = pair.split('=');
+    if (key === param) return decodeURIComponent(value || '');
+  }
+  return null;
+}
 
 
 export default {
   async fetch(request, env, ctx) {
     console.log('log');
     var target = "w1.hjun.tk";
-    if(request.url.includes("?")){
-        target = "w2.hjun.tk";
+
+    const wValue = getQueryParam('w');
+      
+    if(wValue != null){
+        target = wValue + ".hjun.tk";
     }
     const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
     console.log('域名和端口号:', result);
