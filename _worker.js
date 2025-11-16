@@ -8,6 +8,48 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+/**
+ * 查询SRV记录并返回端口号字符串
+ * @param {string} zoneId - Cloudflare区域ID
+ * @param {string} recordName - SRV记录名称
+ * @param {string} apiToken - Cloudflare API Token
+ * @returns {Promise<string>} 端口号字符串
+ */
+async function getSRVRecordPort(zoneId, recordName, apiToken) {
+  const apiUrl = `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records?type=SRV&name=${encodeURIComponent(recordName)}`;
+  
+  const response = await fetch(apiUrl, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${apiToken}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Not Found'); // 统一错误消息
+  }
+
+  const data = await response.json();
+  
+  if (!data.success) {
+    throw new Error('Not Found');
+  }
+
+  // 检查是否有SRV记录
+  if (!data.result || data.result.length === 0) {
+    throw new Error('Not Found');
+  }
+
+  // 获取第一个SRV记录的端口号
+  const srvRecord = data.result[0];
+  if (!srvRecord.data || typeof srvRecord.data.port === 'undefined') {
+    throw new Error('Not Found');
+  }
+
+  // 返回端口号字符串
+  return srvRecord.data.port.toString();
+}
 
 async function resolveSrv(domain) {
     console.log('resolveSrv');
@@ -52,9 +94,9 @@ export default {
     if(wValue != null){
         target = wValue + ".hjun.tk";
     }
-    const result = await getDomainAndPort('_www._tcp.www.xjjun.dynv6.net' , target);
-    console.log('域名和端口号:', result);
-    const location = `http://${result}`;
+    // 获取SRV记录端口号
+    const port = await getSRVRecordPort("56b1a25d6bb2732d9386fc240ca3e5da", "_www._tcp.web.hjun.tk" , "hfAlDzEDOcffS7EThxfukHXtXgs3i-zXEHmiDvL3");
+    const location = `http://${target}:${port}`;
     return Response.redirect(location, 302);
   },
 };
